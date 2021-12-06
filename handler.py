@@ -134,11 +134,6 @@ def get_instances_for_region(region: str) -> str:
 
 @easyargs
 def main(regions_filename="regions.txt", get_instances=""):
-    if get_instances:
-        s = get_instances_for_region(get_instances)
-        print(f"{s}")
-        return
-
     # See https://stackoverflow.com/questions/1661275
     logging.getLogger("boto3").setLevel(logging.CRITICAL)
     logging.getLogger("botocore").setLevel(logging.CRITICAL)
@@ -146,6 +141,11 @@ def main(regions_filename="regions.txt", get_instances=""):
     logging.getLogger("urllib3").setLevel(logging.CRITICAL)
 
     logging.basicConfig(level=logging.DEBUG)
+
+    if get_instances:
+        s = get_instances_for_region(get_instances)
+        logging.info(f"{s}")
+        return
 
     regions = load_regions(regions_filename)
     if not regions:

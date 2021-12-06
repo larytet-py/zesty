@@ -21,6 +21,7 @@ See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.ht
 Development
 
 black .
+python3 -m pylint handler.py
 python3 -m pytest -v .
 """
 
@@ -32,7 +33,7 @@ from typing import Set, List, Dict, Tuple
 import re
 import logging
 import json
-import boto3, botocore
+import boto3
 
 DATETIME_ISO_8601_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
 
@@ -118,7 +119,7 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
         # TODO some exceptgions crash the code. Why?
         # for example botocore.exceptions.EndpointConnectionError
         # Could not connect to the endpoint URL: "https://ec2.ez-southeast-1.amazonaws.com/"
-        logging.exception(f"Failed to get EC2 instances from AWS")
+        logging.exception(f"Failed to get EC2 instances from AWS region {region}")
         return [], False
 
     running_instances = ec2.instances.filter(
@@ -166,6 +167,21 @@ def get_instances_for_region(region: str) -> List[str]:
     return instances
 
 
+def lost_instances(regions: Set[str]) -> Dict[str, List[str]]:
+    ec2_instances: Dict[str, List[str]] = {}
+    for region in regions:
+        instances, ok = load_ec2_instances(region)
+        if not ok:
+            logging.error(f"Failed to get EC2 instances for {region}")
+            continue
+        if not instances:
+            logging.info(f"No instances in {region}")
+            continue
+
+        ec2_instances[region] = instances
+    return ec2_instances
+
+
 @easyargs
 def main(regions_filename="regions.txt", get_instances=""):
     # See https://stackoverflow.com/questions/1661275
@@ -187,18 +203,7 @@ def main(regions_filename="regions.txt", get_instances=""):
         return -1
 
     logging.info(f"Loaded regions {regions}")
-
-    ec2_instances: Dict[str, List[str]] = {}
-    for region in regions:
-        instances, ok = load_ec2_instances(region)
-        if not ok:
-            logging.error(f"Failed to get EC2 instances for {region}")
-            continue
-        if not instances:
-            logging.info(f"No instances in {region}")
-            continue
-
-        ec2_instances[region] = instances
+    ec2_instances = lost_instances(regions)
     dump_regions(ec2_instances)
 
     return 0

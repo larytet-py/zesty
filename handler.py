@@ -80,7 +80,9 @@ def rm_json_files():
         if validate_region(region):
             os.remove(f)
 
-DATETIME_ISO_8601_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
+
+DATETIME_ISO_8601_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
+
 
 def dump_regions(ec2_instances: Dict[str, List[str]]):
     # remove JSON files first

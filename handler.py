@@ -15,8 +15,8 @@ from typing import Set, List, Dict, Tuple
 import re
 import logging
 import json
-
 import boto3
+
 
 # Helper to translate AWS datatime to ISO format
 def datetime_converter(obj):
@@ -62,15 +62,22 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     """
     Based on https://stackoverflow.com/questions/63571591
     """
-    ec2 = boto3.resource("ec2", region_name=region)
+
+    try:
+        ec2 = boto3.resource("ec2", region_name=region)
+    except:
+        logging.exception(f"Failed to get EC2 instaces from AWS")
+        return {}, False
+
     running_instances = ec2.instances.filter(
         Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
     )
-    logging.error(running_instances)
 
-    # running_instances.sort(key=lambda x: x.launch_time, reverse=True)
+    running_instances.sort(
+        key=lambda x: datetime_converter(x.launch_time), reverse=True
+    )
 
-    return ([], False)
+    return (running_instances, True)
 
 
 @easyargs
@@ -81,10 +88,12 @@ def main(regions_filename="regions.txt"):
         logging.error(f"No valid regions in {regions_filename}")
         return -1
 
+    logging.info(f"Loaded regions {regions}")
+
     ec2_instances: Dict[str, List[str]] = {}
     for region in regions:
-        instances, err = load_ec2_instances(regions)
-        if err:
+        instances, ok = load_ec2_instances(region)
+        if not ok:
             continue
         ec2_instances[region] = instances
     dump_regions(ec2_instances)

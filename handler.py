@@ -34,6 +34,8 @@ import logging
 import json
 import boto3, botocore
 
+DATETIME_ISO_8601_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
+
 
 # Helper to translate AWS datatime to ISO format
 def datetime_converter(obj):
@@ -79,9 +81,6 @@ def rm_json_files():
         region = os.path.basename(f).split(".")[0]
         if validate_region(region):
             os.remove(f)
-
-
-DATETIME_ISO_8601_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
 
 
 def dump_regions(ec2_instances: Dict[str, List[str]]):

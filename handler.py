@@ -39,7 +39,7 @@ See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.ht
 Development
 
 black .
-python3 -m pytest .
+python3 -m pytest -v .
 """
 
 import os

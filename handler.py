@@ -177,7 +177,7 @@ def main(regions_filename="regions.txt", get_instances=""):
 
     if get_instances:
         s = get_instances_for_region(get_instances)
-        logging.info(f"{s}")
+        logging.info(s)
         return
 
     regions = load_regions(regions_filename)

@@ -118,7 +118,7 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     return running_instances, True
 
 
-def get_instances(region: str) -> str:
+def get_instances_for_region(region: str) -> str:
     data = ""
     json_filename = region_to_filename(region)
     if not os.path.exists(json_filename):
@@ -135,7 +135,11 @@ def get_instances(region: str) -> str:
 
 
 @easyargs
-def main(regions_filename="regions.txt"):
+def main(regions_filename="regions.txt", get_instances=""):
+    if get_instances:
+        instances = get_instances_for_region(get_instances)
+        logging.indfo(f"{instances}")
+        return 
     # See https://stackoverflow.com/questions/1661275
     logging.getLogger("boto3").setLevel(logging.CRITICAL)
     logging.getLogger("botocore").setLevel(logging.CRITICAL)

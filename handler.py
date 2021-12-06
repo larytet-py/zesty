@@ -52,7 +52,7 @@ def validate_region(region: str):
     """
     m = re.match(r"^[a-z]{2}-[a-z]+-[0-9]+$", region)
 
-    # TODO check if the region exists 
+    # TODO check if the region exists
     # https://stackoverflow.com/questions/38451032
     return m is not None
 
@@ -74,6 +74,10 @@ def load_regions(regions_filename) -> Set[str]:
     return regions
 
 
+def region_to_filename(region: str) -> str:
+    return f"{region}.json"
+
+
 def dump_regions(ec2_instances: Dict[str, List[str]]):
     serializable_instances = {}
     for region, instances in ec2_instances.items():
@@ -83,7 +87,9 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
             for i in instances
         ]
         s = json.dumps(serializable_instances, sort_keys=False, indent=4)
-        json_filename = f"{region}.json"
+        json_filename = region_to_filename(region)
+        # TODO handle exception in case there is a folder with the same name
+        # or write access problems
         with open(json_filename, "wt") as f:
             f.write(s)
 
@@ -112,13 +118,29 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     return running_instances, True
 
 
+def get_instances(region: str) -> str:
+    data = ""
+    json_filename = region_to_filename(region)
+    if not os.path.exists(json_filename):
+        logging.error(f"I don;t have region {region}")
+        return data
+
+    try:
+        with open(json_filename) as f:
+            data = json.load(f)
+    except:
+        logging.exception(f"Failed to load from the file {json_filename}")
+
+    return data
+
+
 @easyargs
 def main(regions_filename="regions.txt"):
     # See https://stackoverflow.com/questions/1661275
-    logging.getLogger('boto3').setLevel(logging.CRITICAL)
-    logging.getLogger('botocore').setLevel(logging.CRITICAL)
-    logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
-    logging.getLogger('urllib3').setLevel(logging.CRITICAL)
+    logging.getLogger("boto3").setLevel(logging.CRITICAL)
+    logging.getLogger("botocore").setLevel(logging.CRITICAL)
+    logging.getLogger("s3transfer").setLevel(logging.CRITICAL)
+    logging.getLogger("urllib3").setLevel(logging.CRITICAL)
 
     logging.basicConfig(level=logging.DEBUG)
 

@@ -119,9 +119,6 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
 
     try:
         ec2 = boto3.resource("ec2", region_name=region)
-        running_instances = ec2.instances.filter(
-            Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
-        )
     except:
         # TODO some exceptgions crash the code. Why?
         # botocore.exceptions.EndpointConnectionError
@@ -129,6 +126,9 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
         logging.exception(f"Failed to get EC2 instaces from AWS")
         return [], False
 
+    running_instances = ec2.instances.filter(
+        Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
+    )
 
     # 'ec2.instancesCollection' object has no attribute 'sort'
     running_instances = [r for r in running_instances]

@@ -121,7 +121,7 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
         ec2 = boto3.resource("ec2", region_name=region)
     except:
         # TODO some exceptgions crash the code. Why?
-        # botocore.exceptions.EndpointConnectionError
+        # for example botocore.exceptions.EndpointConnectionError
         # Could not connect to the endpoint URL: "https://ec2.ez-southeast-1.amazonaws.com/"
         logging.exception(f"Failed to get EC2 instaces from AWS")
         return [], False

@@ -1,11 +1,18 @@
 """
 Usage:
-pip3 install -r requirements.txt
-AWS_ACCESS_KEY_ID="key is here" AWS_SECRET_ACCESS_KEY="secret key" AWS_SESSION_TOKEN="session key" python3 ./handler.py
 
+pip3 install -r requirements.txt
+AWS_ACCESS_KEY_ID="key is here" \
+AWS_SECRET_ACCESS_KEY="secret key" \
+AWS_SESSION_TOKEN="session key" \
+python3 ./handler.py
+
+AWS_ACCESS_KEY_ID="key is here" \
+AWS_SECRET_ACCESS_KEY="secret key" \
+AWS_SESSION_TOKEN="session key" \
+python3 ./handler.py --get_instances="eu-west-1"
 
 Typical output 
-
 [
    {
       "instance_id":"i-0c09c8a02e1342060",
@@ -79,7 +86,15 @@ def region_to_filename(region: str) -> str:
     return f"{region}.json"
 
 
+def rm_json_files():
+    for f in os.listdir("./"):
+        region = basename(f).split(".")[0]
+        if validate_region(region):
+            os.remove(os.path.join(dir, f))
+
+
 def dump_regions(ec2_instances: Dict[str, List[str]]):
+    rm_json_files()
     serializable_instances = {}
     for region, instances in ec2_instances.items():
         # Object of type ec2.Instance is not JSON serializable

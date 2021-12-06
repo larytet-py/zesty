@@ -107,7 +107,11 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
     for region, instances in ec2_instances.items():
         # Object of type ec2.Instance is not JSON serializable
         serializable_instances = [
-            {"instance_id": i.instance_id, "launch_time": str(i.launch_time)}
+            {
+                "instance_id": i.instance_id,
+                "launch_time": str(i.launch_time),
+                "ip_address": i.ip_address,
+            }
             for i in instances
         ]
         s = json.dumps(serializable_instances, sort_keys=False, indent=4)
@@ -129,7 +133,7 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
         # TODO some exceptgions crash the code. Why?
         # for example botocore.exceptions.EndpointConnectionError
         # Could not connect to the endpoint URL: "https://ec2.ez-southeast-1.amazonaws.com/"
-        logging.exception(f"Failed to get EC2 instaces from AWS")
+        logging.exception(f"Failed to get EC2 instances from AWS")
         return [], False
 
     running_instances = ec2.instances.filter(

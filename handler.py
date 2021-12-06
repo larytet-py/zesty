@@ -40,6 +40,10 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
             f.write(s)
 
 
+def load_ec2_instances(regions: Set[str]) -> List[str]:
+    pass
+
+
 @easyargs
 def main(regions_filename="regions.txt"):
     logging.basicConfig(level=logging.DEBUG)

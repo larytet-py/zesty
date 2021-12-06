@@ -167,7 +167,7 @@ def get_instances_for_region(region: str) -> List[str]:
     return instances
 
 
-def lost_instances(regions: Set[str]) -> Dict[str, List[str]]:
+def load_instances(regions: Set[str]) -> Dict[str, List[str]]:
     ec2_instances: Dict[str, List[str]] = {}
     for region in regions:
         instances, ok = load_ec2_instances(region)
@@ -195,7 +195,7 @@ def main(regions_filename="regions.txt", get_instances=""):
     if get_instances:
         s = get_instances_for_region(get_instances)
         logging.info(s)
-        return
+        return 0
 
     regions = load_regions(regions_filename)
     if not regions:
@@ -203,7 +203,7 @@ def main(regions_filename="regions.txt", get_instances=""):
         return -1
 
     logging.info(f"Loaded regions {regions}")
-    ec2_instances = lost_instances(regions)
+    ec2_instances = load_instances(regions)
     dump_regions(ec2_instances)
 
     return 0

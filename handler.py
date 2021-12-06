@@ -88,13 +88,15 @@ def region_to_filename(region: str) -> str:
 
 def rm_json_files():
     for f in os.listdir("./"):
-        region = basename(f).split(".")[0]
+        region = os.path.basename(f).split(".")[0]
         if validate_region(region):
-            os.remove(os.path.join(dir, f))
+            os.remove(f)
 
 
 def dump_regions(ec2_instances: Dict[str, List[str]]):
+    # remove JSON files first
     rm_json_files()
+
     serializable_instances = {}
     for region, instances in ec2_instances.items():
         # Object of type ec2.Instance is not JSON serializable

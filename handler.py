@@ -110,7 +110,7 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
             {
                 "instance_id": i.instance_id,
                 "launch_time": str(i.launch_time),
-                "ip_address": i.ip_address,
+                "public_ip_address": i.public_ip_address,
             }
             for i in instances
         ]
@@ -202,3 +202,4 @@ def main(regions_filename="regions.txt", get_instances=""):
 
 if __name__ == "__main__":
     sys.exit(main())
+

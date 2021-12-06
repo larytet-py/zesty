@@ -34,6 +34,12 @@ Typical output
 
 You can also install ket keys permanently 
 See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+
+
+Development
+
+black .
+python3 -m pytest .
 """
 
 import os

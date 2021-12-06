@@ -63,6 +63,8 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     )
     logging.error(running_instances)
 
+    #running_instances.sort(key=lambda x: x.launch_time, reverse=True)
+
     return ([], False)
 
 

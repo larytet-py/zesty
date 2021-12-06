@@ -15,7 +15,7 @@ python3 ./handler.py --get_instances="eu-west-1"
 
 Typical output [{'instance_id': 'i-0c09c8a02e1342060', 'days_since_launched': 40}, ...
 
-You can also install ket keys permanently 
+You can also install AWS keys permanently 
 See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 
 

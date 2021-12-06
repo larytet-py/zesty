@@ -4,6 +4,27 @@ pip3 install -r requirements.txt
 AWS_ACCESS_KEY_ID="key is here" AWS_SECRET_ACCESS_KEY="secret key" AWS_SESSION_TOKEN="session key" python3 ./handler.py
 
 
+Typical output 
+
+[
+   {
+      "instance_id":"i-0c09c8a02e1342060",
+      "launch_time":"2021-10-27 12:14:19+00:00"
+   },
+   {
+      "instance_id":"i-0684e37a479b7afee",
+      "launch_time":"2021-10-31 10:27:23+00:00"
+   },
+   {
+      "instance_id":"i-03e9c588257859ac9",
+      "launch_time":"2021-11-30 11:26:00+00:00"
+   },
+   {
+      "instance_id":"i-0093b4a49156267b8",
+      "launch_time":"2021-11-30 11:26:01+00:00"
+   }
+]
+
 You can also install ket keys permanently 
 See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 """
@@ -30,6 +51,9 @@ def validate_region(region: str):
     Regex match fot stuff like 'eu-west-1'
     """
     m = re.match(r"^[a-z]{2}-[a-z]+-[0-9]+$", region)
+
+    # TODO check if the region exists 
+    # https://stackoverflow.com/questions/38451032
     return m is not None
 
 
@@ -58,7 +82,7 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
             {"instance_id": i.instance_id, "launch_time": str(i.launch_time)}
             for i in instances
         ]
-        s = json.dumps(serializable_instances)
+        s = json.dumps(serializable_instances, sort_keys=False, indent=4)
         json_filename = f"{region}.json"
         with open(json_filename, "wt") as f:
             f.write(s)

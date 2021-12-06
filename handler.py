@@ -8,9 +8,10 @@ You can also install ket keys permanently
 See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 """
 
+import sys
 from datetime import date, datetime
 import easyargs
-from typing import Set, List
+from typing import Set, List, Dict, Tuple
 import re
 import logging
 import json
@@ -26,7 +27,7 @@ def validate_region(region: str):
     """
     Regex match fot stuff like 'eu-west-1'
     """
-    m = re.match(r"^[a-z]{2}-[a-z]+-[0-9]+$")
+    m = re.match(r"^[a-z]{2}-[a-z]+-[0-9]+$", region)
     return m is not None
 
 

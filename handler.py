@@ -90,7 +90,14 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
 
 @easyargs
 def main(regions_filename="regions.txt"):
+    # See https://stackoverflow.com/questions/1661275
+    logging.getLogger('boto3').setLevel(logging.CRITICAL)
+    logging.getLogger('botocore').setLevel(logging.CRITICAL)
+    logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
+    logging.getLogger('urllib3').setLevel(logging.CRITICAL)
+
     logging.basicConfig(level=logging.DEBUG)
+
     regions = load_regions(regions_filename)
     if not regions:
         logging.error(f"No valid regions in {regions_filename}")
@@ -103,6 +110,10 @@ def main(regions_filename="regions.txt"):
         instances, ok = load_ec2_instances(region)
         if not ok:
             continue
+        if not instances:
+            logging.info(f"No instances in {region}")
+            continue
+
         ec2_instances[region] = instances
     dump_regions(ec2_instances)
 

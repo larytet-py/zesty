@@ -51,8 +51,14 @@ def load_regions(regions_filename) -> Set[str]:
 
 
 def dump_regions(ec2_instances: Dict[str, List[str]]):
+    serializable_instances = {}
     for region, instances in ec2_instances.items():
-        s = json.dumps(instances)
+        # Object of type ec2.Instance is not JSON serializable
+        serializable_instances = [
+            {"instance_id": i.instance_id, "launch_time": i.launch_time}
+            for i in instances
+        ]
+        s = json.dumps(serializable_instances)
         json_filename = f"{region}.json"
         with open(json_filename, "wt") as f:
             f.write(s)

@@ -9,6 +9,7 @@ def test_region_to_filename():
 
 validate_region_testdata = [
     ("eu-west-1", True),
+    ("ap-southeast-11", True),
     ("a", False),
     ("eu-west-1 ", False),
     ("eu1-west-1", False),

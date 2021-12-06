@@ -55,7 +55,7 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
     for region, instances in ec2_instances.items():
         # Object of type ec2.Instance is not JSON serializable
         serializable_instances = [
-            {"instance_id": i.instance_id, "launch_time": i.launch_time}
+            {"instance_id": i.instance_id, "launch_time": str(i.launch_time)}
             for i in instances
         ]
         s = json.dumps(serializable_instances)
@@ -82,7 +82,7 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     # 'ec2.instancesCollection' object has no attribute 'sort'
     running_instances = [r for r in running_instances]
     running_instances.sort(
-        key=lambda x: datetime_converter(x.launch_time), reverse=True
+        key=lambda x: datetime_converter(x.launch_time), reverse=False
     )
 
     return running_instances, True

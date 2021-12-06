@@ -139,7 +139,7 @@ def main(regions_filename="regions.txt", get_instances=""):
     if get_instances:
         instances = get_instances_for_region(get_instances)
         logging.indfo(f"{instances}")
-        return 
+        return
     # See https://stackoverflow.com/questions/1661275
     logging.getLogger("boto3").setLevel(logging.CRITICAL)
     logging.getLogger("botocore").setLevel(logging.CRITICAL)

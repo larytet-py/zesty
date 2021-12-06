@@ -144,8 +144,22 @@ def get_instances_for_region(region: str) -> List[str]:
 
     with open(json_filename) as f:
         data = json.load(f)
-    data = [d["instance_id"] for d in data]
-    return data
+
+    instances: List[Dict[str, str]] = []
+    for instance in data:
+        launch_time_s = instance["launch_time"]
+        # https://stackoverflow.com/questions/466345/converting-string-into-datetime
+        launch_time_s = launch_time_s.split(" ")[0]
+        launch_time = datetime.strptime(launch_time_s, "%Y-%m-%d")
+        days_since_launched = (datetime.now() - launch_time).days
+        instances.append(
+            {
+                "instance_id": instance["instance_id"],
+                "days_since_launched": days_since_launched,
+            }
+        )
+
+    return instances
 
 
 @easyargs

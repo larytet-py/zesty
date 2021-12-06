@@ -40,7 +40,7 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
             f.write(s)
 
 
-def load_ec2_instances(regions: Set[str]) -> List[str]:
+def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     pass
 
 
@@ -54,7 +54,10 @@ def main(regions_filename="regions.txt"):
 
     ec2_instances: Dict[str, List[str]] = {}
     for region in regions:
-        ec2_instances[region], err = load_ec2_instances(regions)
+        instances, err = load_ec2_instances(regions)
+        if err:
+            continue
+        ec2_instances[region] = instances
     dump_regions(ec2_instances)
 
     return 0

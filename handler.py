@@ -80,6 +80,7 @@ def rm_json_files():
         if validate_region(region):
             os.remove(f)
 
+DATETIME_ISO_8601_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 
 def dump_regions(ec2_instances: Dict[str, List[str]]):
     # remove JSON files first
@@ -91,6 +92,7 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
         serializable_instances = [
             {
                 "instance_id": i.instance_id,
+                # TODO use instead launch_time.strftime(DATETIME_ISO_8601_FORMAT)
                 "launch_time": str(i.launch_time),
                 "public_ip_address": i.public_ip_address,
             }
@@ -149,6 +151,7 @@ def get_instances_for_region(region: str) -> List[str]:
     for instance in data:
         launch_time_s = instance["launch_time"]
         # https://stackoverflow.com/questions/466345/converting-string-into-datetime
+        # TODO use instead DATETIME_ISO_8601_FORMAT
         launch_time_s = launch_time_s.split(" ")[0]
         launch_time = datetime.strptime(launch_time_s, "%Y-%m-%d")
         days_since_launched = (datetime.now() - launch_time).days

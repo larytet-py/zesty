@@ -2,6 +2,10 @@
 Usage:
 pip3 install -r requirements.txt
 AWS_ACCESS_KEY_ID="key is here" AWS_SECRET_ACCESS_KEY="secret key" python3 ./handler.py
+
+
+You can also install ket keys permanently 
+See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 """
 
 from datetime import date, datetime
@@ -30,10 +34,13 @@ def load_regions(regions_filename) -> Set[str]:
     regions: Set[str] = {}
     with open(regions_filename, "r") as f:
         for l in f.readline():
-            if not validate_region(l):
-                logging.error(f"Region {l} in {regions_filename} is not valid")
-                continue
-            regions.add(l)
+            regions_in_line = l.split(",")
+            for region in regions_in_line:
+                region = region.strip()
+                if not validate_region(l):
+                    logging.error(f"Region {l} in {regions_filename} is not valid")
+                    continue
+                regions.add(region)
 
     return regions
 

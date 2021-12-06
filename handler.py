@@ -44,7 +44,7 @@ from typing import Set, List, Dict, Tuple
 import re
 import logging
 import json
-import boto3
+import boto3, botocore
 
 
 # Helper to translate AWS datatime to ISO format
@@ -120,8 +120,11 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     try:
         ec2 = boto3.resource("ec2", region_name=region)
     except:
+        # TODO some exceptgions crash the code. Why?
+        # botocore.exceptions.EndpointConnectionError
+        # Could not connect to the endpoint URL: "https://ec2.ez-southeast-1.amazonaws.com/"
         logging.exception(f"Failed to get EC2 instaces from AWS")
-        return {}, False
+        return [], False
 
     running_instances = ec2.instances.filter(
         Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
@@ -175,6 +178,7 @@ def main(regions_filename="regions.txt", get_instances=""):
     for region in regions:
         instances, ok = load_ec2_instances(region)
         if not ok:
+            logging.error(f"Failed to get EC2 instances for {region}")
             continue
         if not instances:
             logging.info(f"No instances in {region}")

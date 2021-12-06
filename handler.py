@@ -16,6 +16,8 @@ import re
 import logging
 import json
 
+import boto3
+
 # Helper to translate AWS datatime to ISO format
 def datetime_converter(obj):
     if isinstance(obj, (datetime, date)):
@@ -32,14 +34,16 @@ def validate_region(region: str):
 
 
 def load_regions(regions_filename) -> Set[str]:
-    regions: Set[str] = {}
+    regions: Set[str] = set()
     with open(regions_filename, "rt") as f:
-        for l in f.readline():
+        for l in f:
             regions_in_line = l.split(",")
             for region in regions_in_line:
                 region = region.strip()
-                if not validate_region(l):
-                    logging.error(f"Region {l} in {regions_filename} is not valid")
+                if not validate_region(region):
+                    logging.error(
+                        f"Region '{region}' in {regions_filename} is not valid"
+                    )
                     continue
                 regions.add(region)
 

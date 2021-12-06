@@ -73,11 +73,13 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
         Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
     )
 
+    # 'ec2.instancesCollection' object has no attribute 'sort'
+    running_instances = [r for r in running_instances]
     running_instances.sort(
         key=lambda x: datetime_converter(x.launch_time), reverse=True
     )
 
-    return (running_instances, True)
+    return running_instances, True
 
 
 @easyargs

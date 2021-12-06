@@ -21,7 +21,7 @@ def validate_region(region: str):
 
 
 def load_regions(regions_filename) -> Set[str]:
-    regions: Set[str]= {}
+    regions: Set[str] = {}
     with open(regions_filename, "r") as f:
         for l in f.readline():
             if not validate_region(l):
@@ -56,5 +56,5 @@ def main(regions_filename="regions.txt"):
     return 0
 
 
-if __name__ == "__main__""
+if __name__ == "__main__":
     sys.exit(main())

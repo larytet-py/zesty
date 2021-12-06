@@ -29,6 +29,7 @@ You can also install ket keys permanently
 See https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 """
 
+import os
 import sys
 from datetime import date, datetime
 import easyargs
@@ -122,14 +123,11 @@ def get_instances_for_region(region: str) -> str:
     data = ""
     json_filename = region_to_filename(region)
     if not os.path.exists(json_filename):
-        logging.error(f"I don;t have region {region}")
+        logging.error(f"I don;t have filename {json_filename} region {region}")
         return data
 
-    try:
-        with open(json_filename) as f:
-            data = json.load(f)
-    except:
-        logging.exception(f"Failed to load from the file {json_filename}")
+    with open(json_filename) as f:
+        data = f.read()
 
     return data
 
@@ -137,9 +135,10 @@ def get_instances_for_region(region: str) -> str:
 @easyargs
 def main(regions_filename="regions.txt", get_instances=""):
     if get_instances:
-        instances = get_instances_for_region(get_instances)
-        logging.indfo(f"{instances}")
+        s = get_instances_for_region(get_instances)
+        print(f"{s}")
         return
+
     # See https://stackoverflow.com/questions/1661275
     logging.getLogger("boto3").setLevel(logging.CRITICAL)
     logging.getLogger("botocore").setLevel(logging.CRITICAL)

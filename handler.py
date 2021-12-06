@@ -33,7 +33,7 @@ def validate_region(region: str):
 
 def load_regions(regions_filename) -> Set[str]:
     regions: Set[str] = {}
-    with open(regions_filename, "r") as f:
+    with open(regions_filename, "rt") as f:
         for l in f.readline():
             regions_in_line = l.split(",")
             for region in regions_in_line:
@@ -50,7 +50,7 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
     for region, instances in ec2_instances.items():
         s = json.dumps(instances)
         json_filename = f"{region}.json"
-        with open(json_filename, "w") as f:
+        with open(json_filename, "wt") as f:
             f.write(s)
 
 

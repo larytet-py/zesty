@@ -1,3 +1,9 @@
+"""
+Usage:
+pip3 install -r requirements.txt
+AWS_ACCESS_KEY_ID="key is here" AWS_SECRET_ACCESS_KEY="secret key" python3 ./handler.py
+"""
+
 from datetime import date, datetime
 import easyargs
 from typing import Set, List
@@ -41,7 +47,16 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
 
 
 def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
-    pass
+    """
+    Based on https://stackoverflow.com/questions/63571591
+    """
+    ec2 = boto3.resource("ec2", region_name=region)
+    running_instances = ec2.instances.filter(
+        Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
+    )
+    logging.error(running_instances)
+
+    return ([], False)
 
 
 @easyargs

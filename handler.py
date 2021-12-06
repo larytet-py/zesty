@@ -2,6 +2,7 @@
 Usage:
 
 pip3 install -r requirements.txt
+
 AWS_ACCESS_KEY_ID="key is here" \
 AWS_SECRET_ACCESS_KEY="secret key" \
 AWS_SESSION_TOKEN="session key" \

@@ -149,15 +149,15 @@ def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
     return running_instances, True
 
 
-def get_instances_for_region(region: str) -> str:
-    data = ""
+def get_instances_for_region(region: str) -> List[Dict[str, str]]:
+    data = []
     json_filename = region_to_filename(region)
     if not os.path.exists(json_filename):
         logging.error(f"I don;t have filename {json_filename} region {region}")
         return data
 
     with open(json_filename) as f:
-        data = f.read()
+        data = json.load(f)
 
     return data
 

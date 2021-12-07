@@ -109,13 +109,12 @@ def dump_regions(ec2_instances: Dict[str, List[str]]):
             f.write(s)
 
 
-def load_ec2_instances(region: str) -> Tuple[List[str], bool]:
+def load_ec2_instances(aws_client, region: str) -> Tuple[List[str], bool]:
     """
     Based on https://stackoverflow.com/questions/63571591
     """
-
     try:
-        ec2 = boto3.resource("ec2", region_name=region)
+        ec2 = aws_client.resource("ec2", region_name=region)
     except:
         # TODO some exceptgions crash the code. Why?
         # for example botocore.exceptions.EndpointConnectionError
@@ -171,7 +170,7 @@ def get_instances_for_region(region: str) -> List[str]:
 def load_instances(regions: Set[str]) -> Dict[str, List[str]]:
     ec2_instances: Dict[str, List[str]] = {}
     for region in regions:
-        instances, ok = load_ec2_instances(region)
+        instances, ok = load_ec2_instances(boto3, region)
         if not ok:
             logging.error(f"Failed to get EC2 instances for {region}")
             continue

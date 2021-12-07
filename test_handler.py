@@ -3,6 +3,7 @@ import pytest
 from typing import List
 from collections import namedtuple
 import handler
+from datetime import datetime
 
 
 def test_region_to_filename():
@@ -31,12 +32,16 @@ EC2Instance = namedtuple(
     "EC2Instance", ["instance_id", "launch_time", "public_ip_address"]
 )
 
+EC2 = namedtuple(
+    "EC2", ["instances"]
+)
+
 
 class EC2Instances:
     def __init__(self, instances: List[EC2Instance]):
         self.instances = instances
 
-    def filter(self):
+    def filter(self, Filters):
         return self.instances
 
 
@@ -44,9 +49,10 @@ class BOTO3Mock:
     def __init__(self):
         pass
 
-    def resource(self, region_name):
-        return EC2Instances([EC2Instance("1", datetime.now(), "1.1.1.1")])
+    def resource(self, resource_name, region_name):
+        return EC2(EC2Instances([EC2Instance("1", datetime.now(), "1.1.1.1")]))
 
 
 def test_load_ec2_instances():
-    handler.load_ec2_instances(BOTO3Mock(), "eu-west-1")
+    ec2_instances, ok = handler.load_ec2_instances(BOTO3Mock(), "eu-west-1")
+    assert ok

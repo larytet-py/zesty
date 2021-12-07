@@ -32,9 +32,7 @@ EC2Instance = namedtuple(
     "EC2Instance", ["instance_id", "launch_time", "public_ip_address"]
 )
 
-EC2 = namedtuple(
-    "EC2", ["instances"]
-)
+EC2 = namedtuple("EC2", ["instances"])
 
 
 class EC2Instances:

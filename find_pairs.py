@@ -7,35 +7,26 @@ from typing import Dict, List
 # Try python3 -m pytest -v .
 
 
-def update_dict(d: Dict[int, int], val: int):
-    counter = d.get(val, 0)
-    d[val] = counter + 1
-
-
 def test_main():
-    input = [9, 0, -7, 4, -3, 2, 2, -8, -2, 3, 3, 7, -2, 3, -2, -9, 0]
-    expected_output = [7, 3, 2, 2, 9]
+    input = [9, -11, 0, -7, 4, -3, 2, 2, -8, -2, 3, 3, 7, -2, 3, -2, -9, 11, 0]
+    expected_output = [7, 3, 2, 2, 9, 11]
 
     negative_numbers, positive_numbers = {}, {}
     output: List[int] = []
 
     for val in input:
-        if val > 0:
-            if negative_numbers.get(-val, 0):
-                output.append(val)
-                negative_numbers[-val] -= 1
-            else:
-                update_dict(positive_numbers, val)
-
+        if not val:
+            continue
+        _dict_sibling, _dict = positive_numbers, negative_numbers
         if val < 0:
-            if positive_numbers.get(-val, 0):
-                output.append(-val)
-                positive_numbers[-val] -= 1
-            else:
-                update_dict(negative_numbers, val)
+            _dict_sibling, _dict = _dict, _dict_sibling
+        val = abs(val)
+        if _dict_sibling.get(val, 0):
+            output.append(val)
+            _dict_sibling[val] -= 1
+        else:
+            _dict[val] = _dict.get(val, 0) + 1
 
     output.sort()
     expected_output.sort()
-    assert (
-        output == expected_output
-    ), f"actual {output}, expected {expected_output}"
+    assert output == expected_output, f"actual {output}, expected {expected_output}"

@@ -13,8 +13,8 @@ def update_dict(d: Dict[int, int], val: int):
 
 
 def test_main():
-    input = [-7, 4, -3, 2, 2, -8, -2, 3, 3, 7, -2, 3, -2, -9, 0]
-    expected_output = [7, 3, 2, 2]
+    input = [9, 0, -7, 4, -3, 2, 2, -8, -2, 3, 3, 7, -2, 3, -2, -9, 0]
+    expected_output = [7, 3, 2, 2, 9]
 
     negative_numbers, positive_numbers = {}, {}
     output: List[int] = []
@@ -24,7 +24,7 @@ def test_main():
             if negative_numbers.get(-val, 0):
                 output.append(val)
                 negative_numbers[-val] -= 1
-            else:``
+            else:
                 update_dict(positive_numbers, val)
 
         if val < 0:
@@ -34,6 +34,8 @@ def test_main():
             else:
                 update_dict(negative_numbers, val)
 
+    output.sort()
+    expected_output.sort()
     assert (
-        output.sort() == expected_output.sort()
+        output == expected_output
     ), f"actual {output}, expected {expected_output}"

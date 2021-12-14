@@ -4,6 +4,7 @@ from typing import Dict, List
 
 # return the positive sibling of a pair. For example,
 # -7 4 -3 2 2 -8 -2 3 3 7 -2 3 -2 -> 7,3,2,2
+# Try python3 -m pytest -v .
 
 
 def update_dict(d: Dict[int, int], val: int):

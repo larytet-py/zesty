@@ -21,15 +21,13 @@ def test_main():
     output: List[int] = []
 
     for val in input:
-        if not val:
-            continue
-
         if counters.get(-val, 0):
             counters[-val] -= 1
             output.append(abs(val))
             continue
 
-        counters[val] = counters.get(val, 0) + 1
+        if val:
+            counters[val] = counters.get(val, 0) + 1
 
     output.sort()
     expected_output.sort()

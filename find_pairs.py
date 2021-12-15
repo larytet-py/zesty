@@ -27,6 +27,9 @@ def test_main():
     output: List[int] = []
 
     for val in input:
+        # Example: I got '7' check if '-7' is in the dictionary
+        # if there is a  match append 7 to the output. If there 
+        # is no match add '7' to the dictionary. 
         if counters.get(-val, 0):
             counters[-val] -= 1
             output.append(abs(val))
